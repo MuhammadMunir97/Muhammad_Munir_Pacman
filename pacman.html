@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pacman</title>
+    <style type="text/CSS">
+    *{
+        background-color: black;
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+        line-height: 0px;
+    }
+    div.row  div{
+        width: 20px;
+        height: 20px;
+        display: inline-block;      
+    }
+    div.brick{
+        background-image:radial-gradient(red, silver, yellow);      
+    }
+    div.coin{
+        background: url("coin.gif");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    div.cherries{
+        background: url("cherries.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+     div.empty{
+
+    } 
+    div#pacman{
+        background: url("pacman.gif");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 20px;
+        height: 20px;
+        position: absolute;
+    }
+    div#score{
+        border: 1px solid white;
+        width: 50px;
+        min-height: 30px;
+        color: white;
+        padding: 7px;
+        text-align: center;
+        position: absolute;
+        top: 50px;
+        left: 400px;
+    }
+    </style>
+</head>
+<body>
+    <div id='world'></div>
+    <div id= 'pacman'></div>
+    <div id="score">100</div>
+
+    <script>
+        // list of features to build
+        // have js display the world of brick/coin/etc
+        // have the pacman move up and down
+
+        // Reload the page to see the difference and how this world is random
+        var score = 10;
+        var world = [];
+        
+        var pacman = {
+            x: 1,
+            y: 1
+        };
+
+        var worldDict ={
+            0: 'empty',
+            1: 'coin',
+            2: 'brick',
+            3: 'cherries'
+        }
+
+       
+    function fillWorld(){
+        for ( var row = 0; row < 17; row++){
+            world.push([2]);
+            for (var col = 0; col < 17; col++){
+                if (row === 0 || row === 16 || col === 16){
+                    world[row].push(2);
+                }else if(row === 1 || row === 15 || col === 15||col ===1){
+                    world[row].push(1);
+                    }else{
+                    world[row].push(Math.floor((Math.random()*4)));
+                }
+            };
+            };
+        };
+
+    fillWorld();
+    console.log(world);
+    function drawWorld() {
+		output = "";
+
+		for (var row = 0; row < world.length ; row++) {
+			output += "<div class ='row'>"
+			for(var x=0; x < world[row].length; x++){
+				output += "<div class ='" + worldDict[world[row][x]] + "'></div>";
+			}
+            console.log(output);
+			output += "</div>"
+		}
+
+		document.getElementById('world').innerHTML = output;
+	}
+    function displayPacman(){
+        document.getElementById('pacman').style.left = pacman.x*20 + "px";
+        document.getElementById('pacman').style.top = pacman.y*20 + "px";
+    }
+    function displayScore(){
+        document.getElementById('score').innerHTML = score;
+    }
+
+    displayScore();
+	drawWorld();
+    displayPacman();
+    document.onkeydown = function(e){
+        if(e.keyCode == 37 && world[pacman.y][pacman.x-1] != 2){
+            pacman.x--;
+        }
+        if(e.keyCode == 39 && world[pacman.y][pacman.x+1] != 2){
+            pacman.x++;
+        }
+        if(e.keyCode == 38 && world[pacman.y -1][pacman.x] != 2){
+            pacman.y--;
+        }
+        if(e.keyCode == 40 && world[pacman.y + 1][pacman.x] != 2){
+            pacman.y++;
+        }
+
+        if (world[pacman.y][pacman.x] == 1 || world[pacman.y][pacman.x] == 3){
+            
+            if (world[pacman.y][pacman.x] == 1){
+            score += 10;
+            } else{
+                score += 50;
+            }
+            world[pacman.y][pacman.x] = 0;
+            displayScore();
+        }
+        drawWorld();
+        displayPacman();
+    }
+    
+
+    </script>
+</body>
+</html>
